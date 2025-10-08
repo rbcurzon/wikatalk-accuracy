@@ -45,34 +45,34 @@ from typing import Dict, Any
 
 mt_bleu_metrics: Dict[str, Dict[str, Any]] = {
 	"Tagalog": {
-		"bleu_score": 34.07,
+		"bleu_score": 31.43,
 	},
 	"Cebuano": {
-		"bleu_score": 36.36,
+		"bleu_score": 29.44,
 	},
 	"Hiligaynon": {
-		"bleu_score": 35.27,
+		"bleu_score": 32.06,
 	},
 	"Ilocano": {
-		"bleu_score": 33.94,
+		"bleu_score": 26.40,
 	},
 	"Pampanga": {
-		"bleu_score": 22.22,
+		"bleu_score": 22.61,
 	},
 	"Pangasinan": {
-		"bleu_score": 37.56,
+		"bleu_score": 21.90,
 	},
 	"Waray": {
-		"bleu_score": 35.96,
+		"bleu_score": 30.66,
 	},        
 	"Bikol": {
 		"bleu_score": 38.69,
 	},
 	"Maguindanao": {
-		"bleu_score": 26.66,
+		"bleu_score": 20.29,
 	},
 	"Bisaya": {
-		"bleu_score": 35.86,
+		"bleu_score": 32.03,
 	},
 	"English": {
 		"bleu_score": 39.03,
@@ -131,31 +131,31 @@ def read_root():
 
 @app.get("/asr_metrics/")
 def read_asr_all_metrics():
-	asr_wer_metrics_classified = {}
+	results = {}
 	for lang, metrics in language_wer_metrics.items():
 		wer = metrics["word_error_rate"]
 		accuracy = classify_accuracy(wer)
-		asr_wer_metrics_classified[lang] = {
+		results[lang] = {
 			"word_error_rate": wer,
 			"accuracy": accuracy
 		}
 
-	asr_wer_metrics_classified = dict(sorted(asr_wer_metrics_classified.items(), key=lambda item: item[1]["word_error_rate"]))
+	results = dict(sorted(results.items(), key=lambda item: item[1]["word_error_rate"]))
 	
-	return {"language_metrics": asr_wer_metrics_classified}
+	return {"language_metrics": results}
 
 @app.get("/asr_accuracy/")
 def read_asr_accuracy():
-	language_accuracy = {
+	results = {
 		"Excellent": [],
 		"Good": [],
 		"High": [],
 		"Poor": [],
 	}
 	for lang, metrics in language_wer_metrics.items():
-		language_accuracy[metrics["accuracy"]].append(lang)
+		results[metrics["accuracy"]].append(lang)
 	
-	return {"language_accuracy": language_accuracy}
+	return {"language_accuracy": results}
 
 @app.get("/mt_metrics/")
 def read_mt_metrics():
